@@ -227,7 +227,7 @@ curl -X POST "http://localhost:8000/bookings/" \
   -d '{"room_slot_id": 1, "booking_date": "2026-07-25"}'
 ```
 
-**5. Отменяем бронирование (с токеном):**
+**5. Отменяем бронирование (требуется авторизация, вставь полученный `access_token` вместо <YOUR_TOKEN>):**
 ```bash
 curl -X DELETE "http://localhost:8000/bookings/1" \
   -H "Authorization: Bearer <YOUR_TOKEN>"
