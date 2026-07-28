@@ -1,10 +1,11 @@
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import time
 
-from app.models.user import User
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.models.room import Room, RoomSlot
 from app.models.time_slot import TimeSlot
+from app.models.user import User
 from app.utils.security_password import hash_the_password
 
 USERS = [
@@ -35,7 +36,7 @@ USERS = [
         "email": "employee3@exemple.ru",
         "password": "employee3_123",
         "is_admin": False,
-    }
+    },
 ]
 
 ROOMS = [
@@ -64,9 +65,10 @@ async def db_init_data(db: AsyncSession):
             username=user["username"],
             full_name=user["full_name"],
             email=user["email"],
-            password_hash=hash_the_password(user["password"]),
-            is_admin=user["is_admin"]
-        ) for user in USERS
+            password_hash=hash_the_password(str(user["password"])),
+            is_admin=user["is_admin"],
+        )
+        for user in USERS
     ]
     db.add_all(users)
 
@@ -82,10 +84,8 @@ async def db_init_data(db: AsyncSession):
         return
 
     time_slots = [
-        TimeSlot(
-            start_time=time_slot["start_time"],
-            end_time=time_slot["end_time"]
-        ) for time_slot in TIME_SLOTS
+        TimeSlot(start_time=time_slot["start_time"], end_time=time_slot["end_time"])
+        for time_slot in TIME_SLOTS
     ]
     db.add_all(time_slots)
     await db.flush()
@@ -93,12 +93,7 @@ async def db_init_data(db: AsyncSession):
     room_slots = []
     for room in rooms:
         for time_slot in time_slots:
-            room_slots.append(
-                RoomSlot(
-                    room_id=room.id,
-                    time_slot_id=time_slot.id
-                )
-            )
+            room_slots.append(RoomSlot(room_id=room.id, time_slot_id=time_slot.id))
     db.add_all(room_slots)
 
     await db.commit()

@@ -1,5 +1,4 @@
 import pytest
-
 from httpx import AsyncClient
 
 
@@ -7,16 +6,29 @@ class TestAuth:
     """Тесты для роута аутентификации"""
 
     @pytest.mark.asyncio
-    @pytest.mark.parametrize("user_data, expected_status, expected_detail", [
-        ({"username": "admin", "password": "admin123"}, 200, "access_token"),
-        ({"username": "employee_1", "password": "employee1_123"}, 200, "access_token"),
-        ({"username": "employee", "password": "employee"}, 401, "Incorrect username or password"),
-    ])
-    async def test_login_status_code(self,
-                                     client: AsyncClient,
-                                     user_data: dict,
-                                     expected_status: int,
-                                     expected_detail: str):
+    @pytest.mark.parametrize(
+        "user_data, expected_status, expected_detail",
+        [
+            ({"username": "admin", "password": "admin123"}, 200, "access_token"),
+            (
+                {"username": "employee_1", "password": "employee1_123"},
+                200,
+                "access_token",
+            ),
+            (
+                {"username": "employee", "password": "employee"},
+                401,
+                "Incorrect username or password",
+            ),
+        ],
+    )
+    async def test_login_status_code(
+        self,
+        client: AsyncClient,
+        user_data: dict,
+        expected_status: int,
+        expected_detail: str,
+    ):
         """Тест проверки статуса кода входа в систему"""
 
         response = await client.post(url="/auth/login", data=user_data)

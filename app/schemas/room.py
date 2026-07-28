@@ -1,4 +1,5 @@
 from typing import List
+
 from pydantic import BaseModel, ConfigDict
 
 from app.schemas.time_slot import TimeSlotResponse
@@ -15,7 +16,10 @@ class RoomSlotResponse(BaseModel):
 
 
 class RoomSlotAvailableResponse(RoomSlotResponse):
-    """Схема для отображения информации о доступных временных слотах переговорной комнаты"""
+    """
+    Схема для отображения информации о доступных временных слотах
+    переговорной комнаты
+    """
 
     is_available: bool = True
 

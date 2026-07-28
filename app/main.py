@@ -1,9 +1,10 @@
-from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from app.database import engine, Base, async_session
+from fastapi import FastAPI
+
+from app.database import Base, async_session, engine
+from app.routers import auth, bookings, rooms
 from app.utils.init_db_data import db_init_data
-from app.routers import auth, rooms, bookings
 
 
 @asynccontextmanager
@@ -22,7 +23,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Meeting Room Booking Service",
     description="Сервис бронирования переговорных комнат",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 app.include_router(auth.router)

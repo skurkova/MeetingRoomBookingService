@@ -47,13 +47,13 @@ MeetingRoomBookingService/
 │   │   ├── time_slot.py           # Модель временного слота
 │   │   └── user.py                # Модель пользователя
 │   │
-│   ├── routers/                   # HTTP-эндпоинты 
+│   ├── routers/                   # HTTP-эндпоинты
 │   │   ├── __init__.py
 │   │   ├── auth.py                # Аутентификация (POST /auth/login)
 │   │   ├── bookings.py            # CRUD бронирований
 │   │   └── rooms.py               # Просмотр комнат и слотов
 │   │
-│   ├── schemas/                   # Pydantic-схемы 
+│   ├── schemas/                   # Pydantic-схемы
 │   │   ├── __init__.py
 │   │   ├── booking.py             # Схемы бронирования
 │   │   ├── room.py                # Схемы переговорной
@@ -63,7 +63,7 @@ MeetingRoomBookingService/
 │   │
 │   ├── tests/                     # Интеграционные тесты
 │   │   ├── __init__.py
-│   │   ├── conftest.py            # Фикстуры pytest 
+│   │   ├── conftest.py            # Фикстуры pytest
 │   │   ├── test_auth.py           # Тесты аутентификации
 │   │   ├── test_bookings.py       # Тесты бронирований
 │   │   └── test_rooms.py          # Тесты переговорных
@@ -75,7 +75,7 @@ MeetingRoomBookingService/
 │   │   ├── get_current_user.py    # Зависимость для получения пользователя
 │   │   ├── get_user.py            # Поиск пользователя в БД
 │   │   ├── init_db_data.py        # Формирование тестовых данных
-│   │   └── security_password.py   # Хеширование паролей 
+│   │   └── security_password.py   # Хеширование паролей
 │   │
 │   ├── config.py                  # Настройки приложения (Pydantic Settings)
 │   ├── database.py                # Подключение к PostgreSQL (async)
@@ -135,7 +135,7 @@ docker compose down -v
 ## 📡 REST API
 
 * **URL:** http://localhost:8000
-* **Интерактивная документация:** http://localhost:8000/docs  
+* **Интерактивная документация:** http://localhost:8000/docs
 * **Аутентификация:** JWT Bearer Token (заголовок `Authorization: Bearer <token>`)
 
 ##  🗓️ Сводная таблица эндпоинтов
@@ -147,7 +147,7 @@ docker compose down -v
 | `GET` | `/rooms/{id}` | Информация о конкретной комнате | 🌐 Публичный |
 | `GET` | `/bookings/` | Список бронирований | 🔒 Только авторизованные |
 | `POST` | `/bookings/` | Создание нового бронирования | 🔒 Только авторизованные |
-| `GET` | `/bookings/{id}` | Детали конкретного бронирования |  Только авторизованные |
+| `GET` | `/bookings/{id}` | Детали конкретного бронирования | 🔒 Только авторизованные |
 | `DELETE` | `/bookings/{id}` | Отмена (удаление) бронирования | 🔒 Только авторизованные |
 
 ## 🔐 Аутентификация
@@ -159,7 +159,7 @@ docker compose down -v
 * **Ответ (200 OK):** `{"access_token": "...", "token_type": "bearer"}`
 * **Ответ (401 Unauthorized):** `{"detail": "Incorrect username or password"}`
 
-## 🏢 Комнаты 
+## 🏢 Комнаты
 **🌐 Публичный доступ**
 
 ### `GET /rooms/`
@@ -172,7 +172,7 @@ docker compose down -v
 * **Ответ (200 OK):** Объект комнаты.
 * **Ответ (404 Not Found):** `{"detail": "Room not found"}`
 
-## 📅 Бронирования 
+## 📅 Бронирования
 **🔒 Только для авторизованных**
 
 ### `GET /bookings/`
@@ -203,7 +203,7 @@ docker compose down -v
   * 👤 **Сотрудник:** может отменить только своё бронирование.
   * 👑 **Администратор:** может отменить любое бронирование.
 * **Ответ (204 No Content):** Успешное удаление (тело ответа пустое).
-* **Ответ (403 Forbidden):** `{"detail": "FORBIDDEN for this user"}` 
+* **Ответ (403 Forbidden):** `{"detail": "FORBIDDEN for this user"}`
 * **Ответ (404 Not Found):** `{"detail": "Booking not found"}`
 
 ### 💡 Пример использования API
@@ -265,7 +265,7 @@ poetry run pytest --cov=app --cov-report=term-missing
 | `employee_3` | `employee3_123` | Сотрудник |
 
 ### 🚪Комнаты
-|   | Name           |  
+|   | Name           |
 |---|----------------|
 | 1 | Переговорная 1 |
 | 2 | Переговорная 2 |

@@ -1,8 +1,9 @@
-from pydantic import BaseModel, ConfigDict
 from datetime import date
 
-from app.schemas.user import UserResponse
+from pydantic import BaseModel, ConfigDict
+
 from app.schemas.room import RoomSlotResponse
+from app.schemas.user import UserResponse
 
 
 class BookingCreate(BaseModel):
@@ -21,4 +22,3 @@ class BookingResponse(BaseModel):
     booking_date: date
 
     model_config = ConfigDict(from_attributes=True)
-

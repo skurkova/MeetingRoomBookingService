@@ -1,22 +1,22 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
 
 from app.database import get_db
-from app.schemas.booking import BookingResponse, BookingCreate
 from app.models.booking import Booking
 from app.models.user import User
+from app.schemas.booking import BookingCreate, BookingResponse
 from app.utils.get_current_user import get_current_user
 
-router = APIRouter(
-    prefix="/bookings",
-    tags=["bookings"]
-)
+router = APIRouter(prefix="/bookings", tags=["bookings"])
 
 
 @router.get("/", response_model=List[BookingResponse], status_code=status.HTTP_200_OK)
-async def get_bookings(db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def get_bookings(
+    db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)
+):
     """Получение списка бронирований переговорных комнат"""
 
     result = await db.execute(select(Booking))
@@ -29,26 +29,31 @@ async def get_bookings(db: AsyncSession = Depends(get_db), user: User = Depends(
 
 
 @router.post("/", response_model=BookingResponse, status_code=status.HTTP_201_CREATED)
-async def create_booking(booking_data: BookingCreate,
-                         user: User = Depends(get_current_user),
-                         db: AsyncSession = Depends(get_db)):
+async def create_booking(
+    booking_data: BookingCreate,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
     """Забронировать временный слот переговорной комнаты"""
 
-    result = await db.execute(select(Booking).where(
-        Booking.room_slot_id == booking_data.room_slot_id,
-        Booking.booking_date == booking_data.booking_date))
+    result = await db.execute(
+        select(Booking).where(
+            Booking.room_slot_id == booking_data.room_slot_id,
+            Booking.booking_date == booking_data.booking_date,
+        )
+    )
     booking_exist = result.scalars().one_or_none()
 
     if booking_exist:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Room is already for this datetime booking"
+            detail="Room is already for this datetime booking",
         )
 
     booking = Booking(
         user_id=user.id,
         room_slot_id=booking_data.room_slot_id,
-        booking_date=booking_data.booking_date
+        booking_date=booking_data.booking_date,
     )
     db.add(booking)
     await db.commit()
@@ -57,28 +62,36 @@ async def create_booking(booking_data: BookingCreate,
     return booking
 
 
-@router.get("/{booking_id}", response_model=BookingResponse, status_code=status.HTTP_200_OK)
-async def get_booking_id(booking_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+@router.get(
+    "/{booking_id}", response_model=BookingResponse, status_code=status.HTTP_200_OK
+)
+async def get_booking_id(
+    booking_id: int,
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
     """Получить бронирование по ID"""
 
     result = await db.execute(select(Booking).where(Booking.id == booking_id))
     booking = result.scalars().first()
     if not booking:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found"
         )
 
     if not user.is_admin and user.id != booking.user_id:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="FORBIDDEN for this user"
+            status_code=status.HTTP_403_FORBIDDEN, detail="FORBIDDEN for this user"
         )
     return booking
 
 
 @router.delete("/{booking_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_booking_id(booking_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def delete_booking_id(
+    booking_id: int,
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
     """Отменить бронирование"""
 
     booking_result = await db.execute(select(Booking).where(Booking.id == booking_id))
@@ -86,14 +99,12 @@ async def delete_booking_id(booking_id: int, db: AsyncSession = Depends(get_db),
 
     if not booking:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found"
         )
 
     if not user.is_admin and booking.user.username != user.username:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="FORBIDDEN for this user"
+            status_code=status.HTTP_403_FORBIDDEN, detail="FORBIDDEN for this user"
         )
 
     await db.delete(booking)

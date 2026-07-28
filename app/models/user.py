@@ -1,12 +1,14 @@
-from sqlalchemy import String, Boolean
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List
+
+from sqlalchemy import Boolean, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 
 
 class User(Base):
     """Пользователь"""
+
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -17,7 +19,5 @@ class User(Base):
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
 
     bookings: Mapped[List["Booking"]] = relationship(
-        back_populates="user",
-        cascade="all, delete-orphan",
-        lazy="selectin"
+        back_populates="user", cascade="all, delete-orphan", lazy="selectin"
     )

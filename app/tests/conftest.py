@@ -1,16 +1,14 @@
 import pytest_asyncio
-
-from sqlalchemy import delete
-from sqlalchemy.pool import NullPool
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy import delete
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.pool import NullPool
 
-from app.database import Base, get_db
 from app.config import settings
+from app.database import Base, get_db
 from app.main import app as _app
-from app.utils.init_db_data import db_init_data
 from app.models.booking import Booking
-
+from app.utils.init_db_data import db_init_data
 
 DATABASE_URL_TEST = settings.test_db_url
 # Используем NullPool, чтобы избежать проблем с event loop в асинхронных тестах
@@ -31,7 +29,7 @@ async def override_get_db():
 
 @pytest_asyncio.fixture()
 async def db_session():
-    """Фикстура сессии для каждого теста """
+    """Фикстура сессии для каждого теста"""
 
     async with async_session_test() as session:
         yield session
@@ -68,7 +66,9 @@ async def client(setup_db_test):
     """Фикстура асинхронного клиента с подмененной зависимостью БД"""
 
     _app.dependency_overrides[get_db] = override_get_db
-    async with AsyncClient(transport=ASGITransport(app=_app), base_url="http://test") as ac:
+    async with AsyncClient(
+        transport=ASGITransport(app=_app), base_url="http://test"
+    ) as ac:
         yield ac
 
     _app.dependency_overrides.clear()
@@ -78,10 +78,7 @@ async def client(setup_db_test):
 async def headers_admin_auth(client: AsyncClient):
     """Фикстура получения токена для авторизации админа"""
 
-    admin_data = {
-        "username": "admin",
-        "password": "admin123"
-    }
+    admin_data = {"username": "admin", "password": "admin123"}
     response = await client.post("/auth/login", data=admin_data)
     assert response.status_code == 200
 
@@ -93,10 +90,7 @@ async def headers_admin_auth(client: AsyncClient):
 async def headers_employee_auth(client: AsyncClient):
     """Фикстура получения токена для авторизации сотрудника"""
 
-    employee_data = {
-        "username": "employee_1",
-        "password": "employee1_123"
-    }
+    employee_data = {"username": "employee_1", "password": "employee1_123"}
     response = await client.post("/auth/login", data=employee_data)
     assert response.status_code == 200
 
