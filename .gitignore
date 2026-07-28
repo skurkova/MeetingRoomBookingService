@@ -1,0 +1,52 @@
+# Python (кэш и временные файлы)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Bиртуальные окружения
+.venv/
+env/
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Docker и Локальные базы данных
+.docker/
+postgres_data/
+
+# Переменные окружения (конфиденциальные данные)
+.env
+.env.local
+.env.*.local
+
+# IDE и редакторы кода
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*~
+
+# Логи
+*.log
