@@ -96,7 +96,7 @@ MeetingRoomBookingService/
 
 ### Шаг 1. **Клонируйте репозиторий:**
 ```bash
-git clone <repository-url>
+git clone https://github.com/skurkova/MeetingRoomBookingService.git
 cd MeetingRoomBookingService
 ```
 
