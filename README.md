@@ -20,16 +20,17 @@
 
 ## 🛠 Технологии
 
-| Компонент     | Технология |
-|---------------|-----------|
-| Язык          | Python 3.11+ |
+| Компонент   | Технология |
+|-------------|-----------|
+| Язык        | Python 3.11+ |
 | Веб-фреймворк | FastAPI |
-| ORM           | SQLAlchemy |
-| База данных   | PostgreSQL |
+| ORM         | SQLAlchemy |
+| База данных | PostgreSQL |
 | Аутентификация | JWT (python-jose) |
 | Хеширование паролей | passlib + bcrypt |
+| Логирование | structlog (асинхронный JSON) |
 | Менеджер зависимостей | Poetry |
-| Тестирование  | pytest + pytest-asyncio + httpx |
+| Тестирование | pytest + pytest-asyncio + httpx |
 | Контейнеризация | Docker + Docker Compose |
 | Качество кода | pre-commit, black, isort, flake8, mypy |
 
