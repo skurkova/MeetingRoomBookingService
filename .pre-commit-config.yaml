@@ -3,10 +3,10 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
-      - id: check-yaml          # Проверка синтаксиса YAML
-      - id: check-toml          # Проверка синтаксиса TOML (pyproject.toml)
-      - id: end-of-file-fixer   # Пустая строка в конце файла
-      - id: trailing-whitespace # Удаление лишних пробелов
+      - id: check-yaml               # Проверка синтаксиса YAML
+      - id: check-toml               # Проверка синтаксиса TOML (pyproject.toml)
+      - id: end-of-file-fixer        # Пустая строка в конце файла
+      - id: trailing-whitespace      # Удаление лишних пробелов
       - id: check-added-large-files  # Запрет коммита файлов >500 КБ
 
   # Сортировка импортов (совместима с Black)
@@ -23,14 +23,14 @@ repos:
       - id: black
         args: ["--line-length", "88"]
 
-  # Линтер кода (PEP 8 + поиск багов)
+  # Линтер кода
   - repo: https://github.com/PyCQA/flake8
     rev: 7.1.1
     hooks:
       - id: flake8
         args: ["--max-line-length=88", "--extend-ignore=E203,W503"]
 
-  # Статический анализ типов (опционально — можно отключить, если мешает)
+  # Статический анализ типов
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.15.0
     hooks:

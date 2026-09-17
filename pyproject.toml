@@ -22,7 +22,8 @@ dependencies = [
     "setuptools (>=83.0.0,<84.0.0)",
     "bcrypt (<4.1.0)",
     "faker (>=40.36.0,<41.0.0)",
-    "factory-boy (>=3.3.3,<4.0.0)"
+    "factory-boy (>=3.3.3,<4.0.0)",
+    "structlog (>=26.1.0,<27.0.0)"
 ]
 
 

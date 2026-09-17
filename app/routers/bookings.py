@@ -5,12 +5,14 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
+from app.logging import get_logger
 from app.models.booking import Booking
 from app.models.user import User
 from app.schemas.booking import BookingCreate, BookingResponse
 from app.utils.get_current_user import get_current_user
 
 router = APIRouter(prefix="/bookings", tags=["bookings"])
+logger = get_logger(__name__)
 
 
 @router.get("/", response_model=List[BookingResponse], status_code=status.HTTP_200_OK)
@@ -24,7 +26,6 @@ async def get_bookings(
 
     if not user.is_admin:
         bookings = [booking for booking in bookings if booking.user_id == user.id]
-
     return bookings
 
 
@@ -56,6 +57,12 @@ async def create_booking(
         booking_date=booking_data.booking_date,
     )
     db.add(booking)
+    await logger.info(
+        "Time slot meeting room slot successfully reserved",
+        user_id=user.id,
+        room_slot_id=booking.room_slot_id,
+        booking_date=booking.booking_date,
+    )
     await db.commit()
     await db.refresh(booking)
 
@@ -83,6 +90,7 @@ async def get_booking_id(
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="FORBIDDEN for this user"
         )
+
     return booking
 
 
@@ -102,10 +110,13 @@ async def delete_booking_id(
             status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found"
         )
 
-    if not user.is_admin and booking.user.username != user.username:
+    if not user.is_admin and booking.user.id != user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="FORBIDDEN for this user"
         )
 
     await db.delete(booking)
+    await logger.info(
+        "Booking successfully canceled", user_id=user.id, booking_id=booking_id
+    )
     await db.commit()

@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     @property
     def test_db_url(self) -> str:
         """URL-адрес тестовой базы данных"""
+
         return (
             f"postgresql+asyncpg://{self.TEST_DB_USER}:{self.TEST_DB_PASSWORD}@"
             f"{self.TEST_DB_HOST}:{self.TEST_DB_PORT}/{self.TEST_DB_NAME}"
